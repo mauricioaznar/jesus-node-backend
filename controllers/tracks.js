@@ -1,27 +1,42 @@
-const { tracksModel } = require("../models");  
+const { matchedData } = require("express-validator");
+const { tracksModel } = require("../models");
+const { handleHttpError } = require("../utils/handleError");
 
+const getItems = async (req, res) => {
+  try {
+    const data = await tracksModel.find({});
+    res.send({ data });
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_ITEMS");
+  }
+};
+const getItem = async (req, res) => {
 
-const getItems = async (req, res) => { 
-    const data = await tracksModel.find({}); 
+  try {
+    req = matchedData(req); 
+    const {id} = req;
+    const data = await tracksModel.findById(id);
     res.send({data});
-}
-const getItem = (req, res) => { 
-}
+  } catch (error) {
+    handleHttpError(res, "ERRROR_GET_ITEM")
+  }
+
+};
 /**
  * Insertar un registro
  * @param {*} req
  * @param {*} res
  */
 const createItems = async (req, res) => {
-    const {body} = req; 
-    console.log(body);
+  try {
+    const body = matchedData(req);
     const data = await tracksModel.create(body);
-    res.send({data});
-}
-const updateItems = (req, res) => { 
-}
-const deleteItems = (req, res) => { 
-}
+    res.send({ data });
+  } catch (error) {
+    handleHttpError(res, "ERROR_CREATE_ITEMS");
+  }
+};
+const updateItems = async (req, res) => {};
+const deleteItems = async (req, res) => {};
 
-
-module.exports = {getItems, getItem, createItems, updateItems, deleteItems}; 
+module.exports = { getItems, getItem, createItems, updateItems, deleteItems };
