@@ -36,7 +36,27 @@ const createItems = async (req, res) => {
     handleHttpError(res, "ERROR_CREATE_ITEMS");
   }
 };
-const updateItems = async (req, res) => {};
-const deleteItems = async (req, res) => {};
+const updateItem = async (req, res) => {
+  try {
+    const {id, ...body} = matchedData(req); 
+    const data = await tracksModel.findOneAndUpdate(
+      id, body
+    );
+    res.send({ data });
+  } catch (error) {
+    handleHttpError(res, "ERROR_UPDATE_ITEMS");
+  }
+};
+const deleteItem = async (req, res) => {
+  try {
+    req = matchedData(req); 
+    const {id} = req;
+    const data = await tracksModel.deleteOne({_id:id});
+    res.send({data});
+  } catch (error) {
+    handleHttpError(res, "ERRROR_DELETE_ITEM")
+  }
 
-module.exports = { getItems, getItem, createItems, updateItems, deleteItems };
+};
+
+module.exports = { getItems, getItem, createItems, updateItem, deleteItem };
