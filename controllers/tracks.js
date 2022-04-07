@@ -16,7 +16,7 @@ const getItem = async (req, res) => {
   try {
     req = matchedData(req); 
     const {id} = req;
-    const data = await tracksModel.findById(id);
+    const data = await tracksModel.findOneData(id);
     res.send({data});
   } catch (error) {
     handleHttpError(res, "ERRROR_GET_ITEM")
