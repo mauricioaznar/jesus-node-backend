@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const tokenSign = async (user) => {
@@ -24,4 +25,3 @@ const verifyToken = async (tokenJwt) => {
 };
 
 module.exports = { tokenSign, verifyToken };
-3

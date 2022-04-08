@@ -12,13 +12,14 @@ const registerCtrl = async (req, res) => {
     const passwordHash = await encrypt(req.password);
     const body = { ...req, password: passwordHash };
     const dataUser = await userModel.create(body);
+
     dataUser.set("password", undefined, { strict: false });
 
     const data = {
       token: await tokenSign(dataUser),
       user: dataUser,
     };
-    res.send({ data });
+    return res.send({ data });
   } catch (error) {
     handleHttpError(res, "ERROR_REGISTER_USER");
   }
@@ -40,10 +41,10 @@ const loginCtrl = async (req, res) => {
     }
     user.set('password', undefined, {strict: false});
     const data = { 
-      token: await tokenSign(user), 
+      token: await tokenSign(user),
       user
     }
-    res.send({data})
+    return res.send({data})
   } catch (error) {
     handleHttpError(res, "ERROR_LOGIN_USER");
   }
