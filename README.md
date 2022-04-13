@@ -6,8 +6,13 @@
 
 # To-do
 
-* install packages for testing 
-* create a database for testing
+* set env for testing and env for development (dot-env)
+  * create a database for testing
+
+
+# Done 
+
+* install packages for testing
 * setup application for testing
 
 

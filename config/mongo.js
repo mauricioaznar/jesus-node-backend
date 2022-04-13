@@ -9,9 +9,7 @@ const dbConnect = () => {
         retryWrites: true,
         w: "majority"
     }, (err, res) => { 
-        if(!err){ 
-            console.log('*** CONEXION CORRECTA ***');
-        }else{ 
+        if(err){
             console.log('*** CONEXION ERRONEA ***');
         }
     })
