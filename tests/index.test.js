@@ -1,66 +1,30 @@
 const supertest = require('supertest')
 const app = require('../app')
 const {setupDatabase, userOne, newTrack} = require("./utils/setupDatabase");
+const { getAdminToken } = require('./utils/get-tokens');
 
 
-// beforeEach(async () => {
-//   await setupDatabase()
-// })
-
-// it("login when userOne", async () => {
-//   const response = await supertest(app)
-//     .post('/api/auth/login')
-//     .send(userOne)
-
-//   console.log(response.body)
-
-//   expect(response.status).toBe(200)
-// })
-
-// it("doesnt login when user and password are not valid", async () => {
-//   const validUser = {
-//     "name": "INvalid user",
-//     "password": "invalid password",
-//     "age": 2,
-//     "email": "mauricioaznar@gmail.com"
-//   }
-
-//   const response = await supertest(app)
-//     .post('/api/auth/login')
-//     .send(validUser)
-
-//   expect(response.status).toBe(403)
-// })
-
-// it("create user when valid properties", async () => {
-//   const newUser = {
-//     "name": "New user name",
-//     "password": "jh2883283",
-//     "age": 30,
-//     "email": "gmail@gmail.com"
-//   }
-
-//   const response = await supertest(app)
-//     .post('/api/auth/register')
-//     .send(newUser)
-
-//   expect(response.status).toBe(200)
-// })
-
-
-let token;
 beforeEach(async () => {
   await setupDatabase();
 });
 
 describe("POST /auth", () => {
-      //Should respond with 200 - Valid data 
-  test("Login when userOne ", async () => {
-    const response = await supertest(app).post("/api/auth/login").send(userOne);
+    //Should respond with 200 - Valid data
+    test("Login when userOne ", async () => {
+        const response = await supertest(app).post("/api/auth/login").send(userOne);
 
-    expect(response.status).toBe(200);
-    token = response.body.data.token;
-  });
+        expect(response.status).toBe(200);
+    });
+
+    //Should respond with 200 - Valid data
+    test("getAdminToken helper function returns token ", async () => {
+        const token = await getAdminToken();
+
+        expect(token).toBeDefined();
+        expect(token.Authorization).toMatch(/Bearer/i);
+    });
+
+
   //Should respond with 200 - Valid properties
   test("Register when all valid  properties", async () => {
     const newUser = {
@@ -95,7 +59,7 @@ describe("POST /auth", () => {
 
 describe("GET /api/tracks", () => {
   //Should respond with 401 - token not beign sent
-  test("It should require authorization", async () => {
+  it("It should require authorization", async () => {
     const response = await supertest(app)
       .get("/api/tracks");
 
@@ -103,10 +67,10 @@ describe("GET /api/tracks", () => {
   });
 
   //Should respond with 200 - send the token
-  test("It responds with JSON when authorization", async () => {
+  it("It responds with JSON when authorization", async () => {
     const response = await supertest(app)
       .get("/api/tracks")
-      .set("Authorization", `Bearer ${token}`)
+      .set((await getAdminToken()))
 
     expect(response.status).toBe(200);
     expect(response.type).toBe("application/json");
@@ -127,7 +91,7 @@ describe("GET By Id /api/tracks/:id", () => {
   test('It responds with JSON of a specific item', async () => {
       const response = await supertest(app) 
         .get('/api/tracks/625e0fe1a9f3a7ff16a92f86')
-        .set("Authorization", `Bearer ${token}`)
+          .set((await getAdminToken()))
 
       expect(response.status).toBe(200);
       expect(response.type).toBe('application/json');
@@ -147,7 +111,7 @@ describe("POST /api/tracks", () => {
     test('New track when valid properties', async () => {
         const response = await supertest(app)
             .post('/api/tracks')
-            .set("Authorization", `Bearer ${token}`)
+            .set((await getAdminToken()))
             .send(newTrack)
         expect(response.status).toBe(200);    
     });
