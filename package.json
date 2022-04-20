@@ -6,7 +6,8 @@
   "scripts": {
     "start": "env-cmd -f .env node ./index.js",
     "dev": "env-cmd -f .env nodemon ./index.js",
-    "test": "env-cmd -f .env.test jest --watchAll --verbose"
+    "test": "env-cmd -f .env.test jest --watchAll --verbose",
+    "test:coverage": "env-cmd -f .env.test jest --coverage"
   },
   "keywords": [],
   "author": "",

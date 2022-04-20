@@ -4,7 +4,7 @@ const {setupDatabase, userOne, newTrack} = require("./utils/setupDatabase");
 const { getAdminToken } = require('./utils/get-tokens');
 
 
-beforeEach(async () => {
+beforeAll(async () => {
   await setupDatabase();
 });
 
